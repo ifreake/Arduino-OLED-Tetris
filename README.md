@@ -221,11 +221,31 @@ All piece shapes are stored as **static `const Point` arrays**, which keeps the 
 > *(Add photos or a short GIF of your build here — a video really sells the project!)*
 
 ```
-[ Start Screen ] [ In-Game ] [ Game Over ]
-TETRIS ┌────┐ GAME
-OLED 0.96 │ ▓▓ │ OVER
-PRESS ROTATE │ ▓▓ │ PRESS ROTATE
-└────┘
+## 🖼️ Screenshots
+
+*(Screenshots coming soon — meanwhile, here's what you'll see on the OLED:)*
+
+**Start Screen:**
+┌────────────────────────┐
+│        TETRIS          │
+│       OLED 0.96        │
+│    PRESS ROTATE        │
+└────────────────────────┘
+
+**In-Game:**
+┌────────────────────────┐
+│  ┌────┐                │
+│  │ ▓▓ │                │
+│  │ ▓▓ │                │
+│  └────┘                │
+└────────────────────────┘
+
+**Game Over:**
+┌────────────────────────┐
+│         GAME           │
+│         OVER           │
+│    PRESS ROTATE        │
+└────────────────────────┘
 ```
 
 ## 🤝 Contributing
