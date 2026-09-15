@@ -1,8 +1,6 @@
 # 🎮 Tetris on Arduino with OLED Display
 
-A compact, fully playable Tetris game built with **Arduino** and a **0.96" SSD1306 OLED display**. This project is a great example of squeezing a classic game into a microcontroller with limited memory and processing power, while keeping the code clean and readable.
-
----
+A compact, fully playable Tetris game built with **Arduino** and a **0.96" SSD1306 OLED display**, developed entirely with **PlatformIO**. This project is a great example of squeezing a classic game into a microcontroller with limited memory and processing power, while keeping the code clean and readable.
 
 ## 📸 Overview
 
@@ -13,8 +11,6 @@ This project implements the classic **Tetris** game on an Arduino board (Uno/Nan
 - Simple gravity + collision + line-clear logic
 
 The board is 10 × 20 cells (standard Tetris grid), with a small cell size (3 px) so it fits nicely beside the display margins.
-
----
 
 ## ✨ Features
 
@@ -27,8 +23,7 @@ The board is 10 × 20 cells (standard Tetris grid), with a small cell size (3 px
 - ✅ Game Over detection
 - ✅ Start / Game Over screens
 - ✅ Lightweight — no dynamic allocation, no external game libraries
-
----
+- ✅ Clean PlatformIO project structure with all dependencies declared in `platformio.ini`
 
 ## 🧰 Hardware Requirements
 
@@ -39,8 +34,6 @@ The board is 10 × 20 cells (standard Tetris grid), with a small cell size (3 px
 | Push buttons (momentary) | 4 |
 | Jumper wires | — |
 | Breadboard (optional) | 1 |
-
----
 
 ## 🔌 Wiring
 
@@ -66,8 +59,6 @@ All buttons use the internal pull-up (`INPUT_PULLUP`), so they are wired **betwe
 | Soft Drop (Down) | D4 |
 | Rotate / Start | D5 |
 
----
-
 ## 🎮 Controls
 
 | Button | Action |
@@ -77,35 +68,123 @@ All buttons use the internal pull-up (`INPUT_PULLUP`), so they are wired **betwe
 | **Down** | Fast drop (soft drop) |
 | **Rotate** | Rotate the piece / Start / Restart the game |
 
----
+## 📁 Project Structure
 
-## 📚 Required Libraries
+```
+Arduino-OLED-Tetris/
+├── src/
+│ └── main.cpp # Main game source code
+├── platformio.ini # PlatformIO configuration & dependencies
+├── README.md
+└── LICENSE
+```
 
-Install these through the Arduino IDE Library Manager:
+## 📚 Dependencies
 
-- **Adafruit GFX Library**
-- **Adafruit SSD1306**
-- **Wire** (built-in)
+All libraries are declared in `platformio.ini` and are installed **automatically** by PlatformIO when you first build the project. No manual installation is required.
 
----
+```ini
+lib_deps =
+adafruit/Adafruit GFX Library
+adafruit/Adafruit SSD1306
+```
+
+- **Adafruit GFX Library** — low-level graphics primitives
+- **Adafruit SSD1306** — driver for the 0.96" OLED display
+- **Wire** — built into the Arduino framework, no extra install needed
 
 ## 🚀 Getting Started
 
-1. Clone this repository:
+### 1. Prerequisites
 
-   ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
-   ```
+Install one of the following:
 
-2. Open `tetris_oled.ino` (or the corresponding `.ino` file) in the Arduino IDE.
+- **PlatformIO IDE** (VS Code extension) — recommended
+→ https://platformio.org/install/ide?install=vscode
 
-3. Install the required libraries (see above).
+- **PlatformIO Core (CLI)** — for terminal users
+```bash
+pip install -U platformio
+```
 
-4. Select your board and port, then **Upload**.
+### 2. Clone the repository
 
-5. After uploading, you'll see the **TETRIS** start screen. Press the **Rotate** button to start playing.
+```bash
+git clone https://github.com/ifreake/Arduino-OLED-Tetris.git
+cd Arduino-OLED-Tetris
+```
 
----
+### 3. Open the project in PlatformIO
+
+- **VS Code:** `File → Open Folder…` and select the cloned folder.
+PlatformIO will automatically detect `platformio.ini` and set up the project.
+
+- **CLI:** simply `cd` into the project folder (already done in step 2).
+
+### 4. Configure your board (if needed)
+
+Open `platformio.ini`. The default target is an **Arduino Uno**:
+
+```ini
+[env:uno]
+platform = atmelavr
+board = uno
+framework = arduino
+monitor_speed = 9600
+
+lib_deps =
+adafruit/Adafruit GFX Library
+adafruit/Adafruit SSD1306
+```
+
+If you're using a different board, change the `env` / `board` line to match your hardware. Examples:
+
+| Board | `board =` value |
+|---|---|
+| Arduino Uno | `uno` |
+| Arduino Nano (ATmega328P) | `nanoatmega328` |
+| Arduino Mega 2560 | `megaatmega2560` |
+| Arduino Leonardo | `leonardo` |
+
+### 5. Build & Upload
+
+**Via VS Code:**
+- Click the **✓ (Build)** button in the PlatformIO toolbar
+- Click the **→ (Upload)** button
+
+**Via CLI:**
+
+```bash
+# Build the firmware
+pio run
+
+# Upload to the connected board
+pio run --target upload
+
+# Open the serial monitor (optional)
+pio device monitor
+```
+
+### 6. Play!
+
+After uploading, you'll see the **TETRIS** start screen on the OLED.
+Press the **Rotate** button to start playing.
+
+## ⚙️ Customization
+
+You can easily tweak the game feel by changing these constants inside `src/main.cpp`:
+
+```cpp
+unsigned long fallDelay = 500; // gravity speed (ms)
+const unsigned long fastFallDelay = 70; // soft-drop speed (ms)
+const unsigned long moveDelay = 120; // horizontal move repeat rate (ms)
+
+#define CELL_SIZE 3 // size of each block in pixels
+#define BOARD_X 48 // board position on the OLED
+#define BOARD_Y 2
+```
+
+Increasing `fallDelay` makes the game easier; lowering it makes it faster.
 
 ## 🧠 Code Structure
 
@@ -122,25 +201,12 @@ Install these through the Arduino IDE Library Manager:
 
 All piece shapes are stored as **static `const Point` arrays**, which keeps the memory footprint low and predictable — ideal for AVR-based Arduinos.
 
----
+## 🛠️ Built With
 
-## ⚙️ Customization
-
-You can easily tweak the game feel by changing these constants:
-
-```cpp
-unsigned long fallDelay      = 500;  // gravity speed (ms)
-const unsigned long fastFallDelay = 70;   // soft-drop speed (ms)
-const unsigned long moveDelay     = 120;  // horizontal move repeat rate (ms)
-
-#define CELL_SIZE 3   // size of each block in pixels
-#define BOARD_X   48  // board position on the OLED
-#define BOARD_Y   2
-```
-
-Increasing `fallDelay` makes the game easier; lowering it makes it faster.
-
----
+- [PlatformIO](https://platformio.org/) — cross-platform build system & IDE
+- [Arduino Framework](https://www.arduino.cc/) — hardware abstraction layer
+- [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library) — graphics core
+- [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) — OLED driver
 
 ## 📝 Notes & Limitations
 
@@ -148,42 +214,38 @@ Increasing `fallDelay` makes the game easier; lowering it makes it faster.
 - Only simple wall kicks are supported (no SRS-style rotation offsets).
 - The OLED refresh rate is limited by the I2C bus; the render loop only draws when needed.
 - Designed for **AVR-based Arduinos** (Uno, Nano, etc.) but should work on most 5V Arduino-compatible boards.
-
----
+- Flash usage is low enough to also fit on smaller ATmega328P boards without modification.
 
 ## 🖼️ Screenshots
 
 > *(Add photos or a short GIF of your build here — a video really sells the project!)*
 
 ```
-[ Start Screen ]     [ In-Game ]         [ Game Over ]
-    TETRIS             ┌────┐              GAME
-    OLED 0.96          │ ▓▓ │              OVER
-  PRESS ROTATE         │ ▓▓ │           PRESS ROTATE
-                       └────┘
+[ Start Screen ] [ In-Game ] [ Game Over ]
+TETRIS ┌────┐ GAME
+OLED 0.96 │ ▓▓ │ OVER
+PRESS ROTATE │ ▓▓ │ PRESS ROTATE
+└────┘
 ```
-
----
 
 ## 🤝 Contributing
 
 Pull requests, suggestions, and improvements are welcome!
 If you find a bug or want a new feature (scoring, levels, next-piece preview, sound, etc.), feel free to open an issue.
 
----
-
 ## 📄 License
 
-This project is released under the **MIT License** — free to use, modify, and share.
-
----
+This project is released under the **MIT License** — see the [LICENSE](LICENSE) file for details. Free to use, modify, and share.
 
 ## 🙌 Acknowledgments
 
-- Adafruit for the excellent **GFX** and **SSD1306** libraries
+- PlatformIO team for the excellent build system
+- Adafruit for the **GFX** and **SSD1306** libraries
 - The Arduino community for endless inspiration
 - Alexey Pajitnov for creating Tetris in the first place 🎉
 
 ---
 
 **Enjoy the game! 🕹️**
+
+---
